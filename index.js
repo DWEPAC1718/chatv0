@@ -33,4 +33,10 @@ app.get("/ola", function (req,res) {
 	res.send("<h1>Olá Domingos Escuteiro Gomes</h1>")
 });
 
+
+// sockets
+io.on('connection', function(socket){
+	console.log('temos um cliente ligado');
+});
+
 server.listen(3000);
