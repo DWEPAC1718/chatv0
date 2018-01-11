@@ -2,34 +2,66 @@
 <html>
 <head>
 	<title></title>
-
+	<style type="text/css">
+		div#board h4 {
+			color:red;
+		}
+	</style>
 	<script src="socket.io/socket.io.js"></script>
 
 </head>
 <body>
 
+<div id="nick">
+	<input type="text" id="nickname">
+	<input type="button" id="bnick" value="registar nickname">
+</div>
+
 <div id="message">
 	<input type="text" id="msg">
 	<input type="button" id="bpost" value="enviar">
 </div>
-<div id="board"></div>
+
+<div id="board">
+	--
+</div>
 
 <script type="text/javascript">
-	
+
+	var divn = document.getElementById("nick");
+	var divc = document.getElementById("board");
+	var divm = document.getElementById("message");
+	var nickname = "";
+
+
+	divm.style.visibility = "hidden";
+
 	var socket = io.connect();
 	console.log(socket);
-	divc = document.getElementById("board");
+
+	var bnick = document.getElementById("bnick");
+	bnick.addEventListener("click", function () {
+		nickname = document.getElementById("nickname").value;
+		socket.emit("newuser", nickname);
+		divm.style.visibility = "visible";
+		divn.style.visibility = "hidden";
+	});
 
 	var bpost = document.getElementById("bpost");
 	bpost.addEventListener("click", function () {
-		msg = document.getElementById("msg").value;
-		socket.emit("post", msg);
+		var msg = document.getElementById("msg").value;
+		socket.emit("post", {"nick":nickname,"message":msg});
 	});
 
 	socket.on("postmessage", function (content) {
 		newpost = document.createElement("p");
-		newpost.innerHTML = content;
+		newpost.innerHTML = "[" + content.nick + "] : " + content.message;
 		divc.append(newpost);
+	});
+	socket.on("newuser", function (content) {
+		newuser = document.createElement("h4");
+		newuser.innerHTML = "[novo utilizador] " + content;
+		divc.append(newuser);
 	});
 
 </script>

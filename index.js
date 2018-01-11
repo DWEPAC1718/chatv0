@@ -36,9 +36,14 @@ app.get("/ola", function (req,res) {
 
 // sockets
 io.on('connection', function(socket){
-	console.log('temos um cliente ligado');
+	console.log('temos mais um cliente ligado');
+	//console.log(io.sockets);
+	socket.on("newuser", function (content) {
+		console.log("novo utilizador"+ content);
+		io.emit("newuser",content)
+	});
 	socket.on("post", function (content) {
-		console.log("--"+content);
+		console.log("--"+content.nick + "--" + content.message);
 		io.emit("postmessage",content)
 	});
 });
