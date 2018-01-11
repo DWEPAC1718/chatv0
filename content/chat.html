@@ -8,12 +8,29 @@
 </head>
 <body>
 
-
+<div id="message">
+	<input type="text" id="msg">
+	<input type="button" id="bpost" value="enviar">
+</div>
+<div id="board"></div>
 
 <script type="text/javascript">
 	
 	var socket = io.connect();
 	console.log(socket);
+	divc = document.getElementById("board");
+
+	var bpost = document.getElementById("bpost");
+	bpost.addEventListener("click", function () {
+		msg = document.getElementById("msg").value;
+		socket.emit("post", msg);
+	});
+
+	socket.on("postmessage", function (content) {
+		newpost = document.createElement("p");
+		newpost.innerHTML = content;
+		divc.append(newpost);
+	});
 
 </script>
 </body>

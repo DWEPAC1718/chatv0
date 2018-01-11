@@ -37,6 +37,10 @@ app.get("/ola", function (req,res) {
 // sockets
 io.on('connection', function(socket){
 	console.log('temos um cliente ligado');
+	socket.on("post", function (content) {
+		console.log("--"+content);
+		io.emit("postmessage",content)
+	});
 });
 
 server.listen(3000);
